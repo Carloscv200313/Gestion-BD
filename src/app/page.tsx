@@ -2,14 +2,7 @@
 import Image from "next/image";
 
 export default function Home() {
-  const datos = (e) => {//+
-    e.preventDefault();
-    const data = new FormData(e.target);
-    console.log(data);//+
-    data.forEach((value, key) => {
-      console.log(`${key}: ${value}`); // Muestra el nombre del campo y su valor
-    });
-  };
+
   return (
     <div className="flex min-h-screen bg-gray-100">
       <div className="flex flex-1 flex-col justify-center py-12 px-4 sm:px-6 lg:flex-none lg:px-20 xl:px-24">
@@ -20,7 +13,7 @@ export default function Home() {
             </h2>
           </div>
           <div className="mt-8">
-            <form className="space-y-6" onSubmit={datos} >
+            <form className="space-y-6"  >
               <div>
                 <label className="block text-sm font-medium text-gray-700">
                   Usuario
