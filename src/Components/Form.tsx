@@ -1,8 +1,6 @@
 "use client"
-
 import { useRouter } from "next/navigation";
 import { useState } from "react";
-
 export const Form = () => {
     const route= useRouter()
     const [user,setUser]= useState("");
@@ -18,7 +16,26 @@ export const Form = () => {
                 alert(data.message)
             }
             else{
-                route.push("/Home")
+                if(data==="cajero"){
+                    route.push("/Cajero")
+                    console.log(data)
+                }
+                if(data==="cocinero"){
+                    route.push("/Cocinero")
+                    console.log(data)
+                }
+                if(data==="mozo"){
+                    route.push("/Atencion")
+                    console.log(data)
+                }
+                if(data==="gerente"){
+                    route.push("/Home")
+                    console.log(data)
+                }
+                if(data==="supervisor"){
+                    route.push("/Inventario")
+                    console.log(data)
+                }
             }
         });
     }

@@ -10,17 +10,19 @@ export async function POST(req: NextRequest) {
     console.log(user, password);
     const result = await conx.request()
         .input("usuario", sql.VarChar, user)
-        .input("contraseña", sql.Int, Number(password))
-        .query("SELECT * FROM Credencial WHERE usuario=@usuario and contraseña=@contraseña");
+        .input("contrasena", sql.VarChar, password)
+        .execute("Validar_usuario")
 
-    if (result.rowsAffected[0] === 1) {
+    if (!result.recordset[0].mensaje) {
+        const {id_empleado, cargo}= result.recordset[0]
         const token = jwt.sign(
             {
                 exp: Math.floor(Date.now() / 1000) + 60, // 1 minuto de expiración
                 user,
-                password,
+                id_empleado,
+                cargo
             },
-            'secret' // Clave secreta para firmar el token
+            cargo // Clave secreta para firmar el token
         );
 
         // Serializar la cookie
@@ -31,7 +33,7 @@ export async function POST(req: NextRequest) {
         });
 
         // Crear una respuesta con la cookie en las cabeceras
-        const response = NextResponse.json("hola");
+        const response = NextResponse.json(cargo);
         response.headers.set("Set-Cookie", serialized);
         
         return response;
