@@ -12,13 +12,13 @@ interface User{
 }
 export async function POST(req: NextRequest) {
     const cookie = req.cookies.get('mytoken');
-    const {total, estado, tipo, metodo, nombre, apellido , ruc, telefono, pedidos} = await req.json();
+    const {total, estado, tipo, metodo, nombre, apellido , ruc, telefono, pedidos, cargo} = await req.json();
 
     if (cookie == undefined) {
         return NextResponse.json("error");
     }
     try {
-        const datos = verify(cookie.value, 'mozo');
+        const datos = verify(cookie.value, cargo);
         const user = datos as User;
         const id_empleado = user.id_empleado;
         console.log(id_empleado);

@@ -99,7 +99,7 @@ export function RestaurantTablesComponent() {
                   transition={{ duration: 0.3 }}
                 >
                   <TableCell className="font-medium">{pedido.plato}</TableCell>
-                  <TableCell>Empleado {pedido.nombre_empleado}</TableCell>
+                  <TableCell>{pedido.nombre_empleado}</TableCell>
                   <TableCell>{pedido.cantidad}</TableCell>
                   <TableCell>{pedido.nombre_cliente}</TableCell>
                   <TableCell>

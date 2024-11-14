@@ -211,46 +211,52 @@ export function PedidosMozoVerificacion() {
 
   const guardarPedido = async () => {
     const platosParaGuardar = pedidoActual.filter(item => item.tipo === 'plato');
-    if (platosParaGuardar.length === 0) {
-      toast.error('No hay platos para guardar');
-      return;
+    const todosLosItems = [...pedidoActual];
+
+    if (platosParaGuardar.length > 0) {
+      for (const plato of platosParaGuardar) {
+        const nuevoPedido: Pedido = {
+          id_pedido: pedidos.length + 1,
+          cliente: cliente,
+          items: [plato],
+          total: plato.precio_unitario * plato.cantidad,
+          estado: 'pendiente'
+        }
+        try {
+          const response = await fetch('/api/pedido', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+              plato: plato.nombre,
+              cantidad: plato.cantidad,
+              nombre: `${cliente.nombre} ${cliente.apellido}`,
+              estado: 'pendiente'
+            })
+          });
+
+          if (response.ok) {
+            toast.success('Pedido de plato guardado con éxito!')
+            setPedidos([...pedidos, nuevoPedido])
+          } else {
+            throw new Error('Error al guardar el pedido de plato en la base de datos')
+          }
+        } catch (error) {
+          console.error(error)
+          toast.error('Hubo un problema al guardar el pedido de plato')
+        }
+      }
     }
 
-    for (const plato of platosParaGuardar) {
-      const nuevoPedido: Pedido = {
-        id_pedido: pedidos.length + 1,
-        cliente: cliente,
-        items: [plato],
-        total: plato.precio_unitario * plato.cantidad,
-        estado: 'pendiente'
-      }
-      
-      // Llamada a la API para guardar el pedido
-      try {
-        const response = await fetch('/api/pedido', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json'
-          },
-          body: JSON.stringify({
-            plato: plato.nombre,
-            cantidad: plato.cantidad,
-            nombre: `${cliente.nombre} ${cliente.apellido}`,
-            estado: 'pendiente'
-          })
-        });
-        
-        if (response.ok) {
-          toast.success('Pedido guardado con éxito!')
-          setPedidos([...pedidos, nuevoPedido])
-        } else {
-          throw new Error('Error al guardar el pedido en la base de datos')
-        }
-      } catch (error) {
-        console.error(error)
-        toast.error('Hubo un problema al guardar el pedido')
-      }
+    const nuevoRegistroPedido: Pedido = {
+      id_pedido: pedidos.length + 1,
+      cliente: cliente,
+      items: todosLosItems,
+      total: Number(calcularTotal()),
+      estado: 'pendiente'
     }
+    setPedidos([...pedidos, nuevoRegistroPedido])
     setPedidoActual([])
     cerrarModal()
   }
@@ -285,7 +291,8 @@ export function PedidosMozoVerificacion() {
         apellido,
         ruc,
         telefono,
-        pedidos: pedidosItems
+        pedidos: pedidosItems,
+        cargo: "mozo"
       })
     })
     toast.success('Venta procesada con éxito!')
