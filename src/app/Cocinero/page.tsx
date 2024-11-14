@@ -1,7 +1,9 @@
-export default function Home(){
-    return(
+import { RestaurantTablesComponent } from "@/Components/restaurant-tables";
+
+export default function Home() {    
+    return (
         <>
-        <h1>Cocinero</h1>
+            <RestaurantTablesComponent/>
         </>
     )
 }

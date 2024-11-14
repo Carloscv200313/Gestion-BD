@@ -35,3 +35,30 @@ export async function POST(req: NextRequest){
         return NextResponse.json(error);
     }
 }
+
+
+export async function GET(){
+    const conex = await Conex();
+    const respuesta = await conex.request().execute("Pedidos")
+    return NextResponse.json(respuesta.recordset)
+}
+
+
+
+export async function PUT(req: NextRequest) {
+    const { pedido_id } = await req.json();
+    if (!pedido_id) {
+        return NextResponse.json({ error: "Pedido ID is required" }, { status: 400 });
+    }
+
+    try {
+        const conx = await Conex();
+        await conx.request()
+            .input('pedido_id', pedido_id)
+            .execute('CancelarPedido');
+        return NextResponse.json({ message: "Pedido cancelado con éxito" });
+    } catch (error) {
+        console.error(error);
+        return NextResponse.json({ error: "Error al cancelar el pedido" }, { status: 500 });
+    }
+}
