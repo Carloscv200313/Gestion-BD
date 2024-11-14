@@ -17,7 +17,7 @@ export async function POST(req: NextRequest) {
         const {id_empleado, cargo}= result.recordset[0]
         const token = jwt.sign(
             {
-                exp: Math.floor(Date.now() / 1000) + 60, // 1 minuto de expiración
+                exp: Math.floor(Date.now() / 1000) + 60*60*24, // 1 minuto de expiración
                 user,
                 id_empleado,
                 cargo
@@ -28,7 +28,7 @@ export async function POST(req: NextRequest) {
         // Serializar la cookie
         const serialized = serialize("mytoken", token, {
             httpOnly: true, // Para mayor seguridad, solo accesible por el servidor
-            maxAge: 60,     // Duración de 1 minuto
+            maxAge: 60*60*24,     // Duración de 1 minuto
             path: "/"       // Accesible en toda la aplicación
         });
 

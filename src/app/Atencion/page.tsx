@@ -1,7 +1,8 @@
+import { PedidosMozoVerificacion } from "@/Components/pedidos-mozo-verificacion";
 export default function Home(){
     return(
-        <>
-        <h1>ATENCION</h1>
+        <> 
+            <PedidosMozoVerificacion/>
         </>
     )
 }
