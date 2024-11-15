@@ -12,12 +12,12 @@ interface User{
 }
 export async function POST(req: NextRequest){
     const cookie = req.cookies.get('mytoken');
-    const {plato, cantidad, nombre, estado}= await req.json();
+    const {plato, cantidad, nombre, estado, cargo}= await req.json();
     if (cookie == undefined) {
         return NextResponse.json("error");
     }
     try {
-        const datos = verify(cookie.value, 'mozo');
+        const datos = verify(cookie.value, cargo);
         const user = datos as User;
         const id_empleado = user.id_empleado;
         const conex = await Conex();
@@ -35,16 +35,11 @@ export async function POST(req: NextRequest){
         return NextResponse.json(error);
     }
 }
-
-
 export async function GET(){
     const conex = await Conex();
     const respuesta = await conex.request().execute("Pedidos")
     return NextResponse.json(respuesta.recordset)
 }
-
-
-
 export async function PUT(req: NextRequest) {
     const { pedido_id } = await req.json();
     if (!pedido_id) {

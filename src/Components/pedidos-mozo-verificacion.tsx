@@ -232,7 +232,8 @@ export function PedidosMozoVerificacion() {
               plato: plato.nombre,
               cantidad: plato.cantidad,
               nombre: `${cliente.nombre} ${cliente.apellido}`,
-              estado: 'pendiente'
+              estado: 'pendiente',
+              cargo: "mozo"
             })
           });
 

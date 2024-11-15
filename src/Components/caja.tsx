@@ -48,7 +48,7 @@ interface Cliente {
     metodo: 'yape' | 'efectivo' | 'tarjeta'
 }
 
-export function PedidosMozo() {
+export function Caja() {
     const [pedidoActual, setPedidoActual] = useState<PedidoItem[]>([])
     const [platosEjemplo, setPlatos] = useState<Plato[]>([])
     const [productos, setProductos] = useState<Producto[]>([])
@@ -196,6 +196,31 @@ export function PedidosMozo() {
         const { nombre, apellido, ruc, telefono } = cliente
         const tipo = cliente.tipo === 'en local' ? 1 : cliente.tipo === 'delivery' ? 2 : 3
         const metodo = cliente.metodo === 'yape' ? 1 : cliente.metodo === 'efectivo' ? 2 : 3
+        const platosParaGuardar = pedidoActual.filter(item => item.tipo === 'plato');
+        if (platosParaGuardar.length > 0) {
+            for (const plato of platosParaGuardar) {
+                try {
+                    const response = await fetch('/api/pedido', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({
+                            plato: plato.nombre,
+                            cantidad: plato.cantidad,
+                            nombre: `${cliente.nombre} ${cliente.apellido}`,
+                            estado: 'pendiente',
+                            cargo: "cajero"
+                        })
+                    });
+                    console.log(response);
+                    toast.success('Pedido del Plato ha sido guardado')
+                } catch (error) {
+                    console.error(error)
+                    toast.error('Hubo un problema al guardar el pedido de plato')
+                }
+            }
+        }
         await fetch("/api/venta", {
             method: "POST",
             headers: {
@@ -365,24 +390,9 @@ export function PedidosMozo() {
                         </div>
                         <div className="grid grid-cols-4 items-center gap-4">
                             <Label htmlFor="telefono" className="text-right">
-                                Teléfono
+                                DNI
                             </Label>
                             <Input id="telefono" name="telefono" value={cliente.telefono} onChange={manejarCambioCliente} className="col-span-3" />
-                        </div>
-                        <div className="grid grid-cols-4 items-center gap-4">
-                            <Label htmlFor="estadoVenta" className="text-right">
-                                Estado de Venta
-                            </Label>
-                            <Select onValueChange={(value) => manejarCambioSelect('estado', value)} value={cliente.estado}>
-                                <SelectTrigger className="col-span-3">
-                                    <SelectValue placeholder="Seleccione el estado" />
-                                </SelectTrigger>
-                                <SelectContent>
-                                    <SelectItem value="pedido">Pedido</SelectItem>
-                                    <SelectItem value="proceso">Proceso</SelectItem>
-                                    <SelectItem value="cancelado">Cancelado</SelectItem>
-                                </SelectContent>
-                            </Select>
                         </div>
                         <div className="grid grid-cols-4 items-center gap-4">
                             <Label className="text-right">
@@ -393,10 +403,6 @@ export function PedidosMozo() {
                                 value={cliente.tipo}
                                 className="col-span-3 flex space-x-4"
                             >
-                                <div className="flex items-center space-x-2">
-                                    <RadioGroupItem value="en local" id="en-local" />
-                                    <Label htmlFor="en-local">En local</Label>
-                                </div>
                                 <div className="flex items-center space-x-2">
                                     <RadioGroupItem value="delivery" id="delivery" />
                                     <Label htmlFor="delivery">Delivery</Label>
@@ -440,10 +446,10 @@ export function PedidosMozo() {
                             <h3 className="font-bold">Datos del Cliente:</h3>
                             <p>Nombre: {cliente.nombre} {cliente.apellido}</p>
                             <p>RUC: {cliente.ruc}</p>
-                            <p>Teléfono: {cliente.telefono}</p>
+                            <p>DNI: {cliente.telefono}</p>
                             <p>Estado de Venta: {cliente.estado}</p>
                             <p>Tipo de Venta: {cliente.tipo}</p>
-                            <p>Método de Pago: {cliente.metodo}</p>
+                            <p>Método de Pago: Cancelado</p>
                             <h3 className="font-bold mt-4">Resumen del Pedido:</h3>
                             <Table>
                                 <TableHeader>

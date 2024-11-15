@@ -1,9 +1,8 @@
-import { PedidosMozo } from "@/Components/caja";
-
+import { Caja } from "@/Components/caja";
 export default function Home(){
     return(
         <>
-        <PedidosMozo/>
+        <Caja/>
         </>
     )
 }
