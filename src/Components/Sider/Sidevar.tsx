@@ -17,6 +17,8 @@ export const Sidevar = () => {
                 alt={'logo'}
                 width={150}
                 height={200}
+                priority
+                className='w-auto h-auto'
             />
             <div className='flex flex-col h-screen items-start justify-center w-full gap-4'>
                 {
