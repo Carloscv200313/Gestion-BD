@@ -14,9 +14,12 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className="flex flex-row">
+      <body className="flex md:flex-row flex-col md:h-screen">
           <Sidevar />
-          {children}
+          <div className="overflow-y-auto w-full">
+            {children}
+          </div>
+          
       </body>
     </html>
   );

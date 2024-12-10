@@ -87,6 +87,7 @@ export function EmpleadosTable() {
     })
     console.log(nuevoEmpleado)
     setModalAbierto(false)
+    window.location.reload();
   }
   const cambiarEstado= async (estado: boolean, id: number)=>{
     console.log(estado)
@@ -234,7 +235,7 @@ export function EmpleadosTable() {
             </div>
           </div>
           <DialogFooter>
-            <Button onClick={guardarPedido}>Guardar Pedido</Button>
+            <Button onClick={guardarPedido}>Guardar Empleado</Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>
